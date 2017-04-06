@@ -10,6 +10,12 @@ public class Student {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Student(String userName, String password) {
+		super();
+		this.userName = userName;
+		this.password = password;
+	}
 
 	public String getUserName() {
 		return userName;
