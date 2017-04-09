@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        ">
+
+	<bean id="customer" class="org.framestudy.user_manage.bean.Customer">
+		<property name="cusName" value="xiaohei"></property>
+		<property name="order" ref="order"></property>
+	</bean>
+	<bean id="order" class="org.framestudy.user_manage.bean.Order">
+		<property name="orderName" value="苹果订单"></property>
+	</bean>
+</beans>

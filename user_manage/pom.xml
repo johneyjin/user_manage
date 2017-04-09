@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.framestudy</groupId>
-  <artifactId>demo2</artifactId>
+  <artifactId>user_manage</artifactId>
   <packaging>war</packaging>
   <version>1.0</version>
-  <name>demo2 Maven Webapp</name>
+  <name>user_manage Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
@@ -14,13 +14,13 @@
       <version>4.12</version>
       <scope>test</scope>
     </dependency>
-   <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
 	<dependency>
 	    <groupId>org.springframework</groupId>
 	    <artifactId>spring-context</artifactId>
 	    <version>4.3.7.RELEASE</version>
 	</dependency>
-	<!--  -->
+	<!-- spring框架所提供的测试组件，该组件主要用于与Junit框架进行兼容 -->
 	<!-- https://mvnrepository.com/artifact/org.springframework/spring-test -->
 	<dependency>
 	    <groupId>org.springframework</groupId>
@@ -39,12 +39,8 @@
 	    <artifactId>aspectjweaver</artifactId>
 	    <version>1.8.10</version>
 	</dependency>
-		
-	
-	
-
   </dependencies>
   <build>
-    <finalName>demo2</finalName>
+    <finalName>user_manage</finalName>
   </build>
 </project>
