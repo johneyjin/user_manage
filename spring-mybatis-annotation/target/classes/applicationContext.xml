@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx" 
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd 
+        http://www.springframework.org/schema/aop  
+        http://www.springframework.org/schema/aop/spring-aop.xsd 
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-3.1.xsd">
+        
+    <!-- 自动扫描机制-->    
+    <context:component-scan base-package="org.framestudy.spring_mybatis_annotation"></context:component-scan>
+    <aop:aspectj-autoproxy />
+    
+    
+	<!-- Spring容器兼容其他框架步骤 -->  
+	<!-- 1、配置数据源（web项目中，一般数据源特指数据库） -->
+	<!-- 2、 配置SessionFactory-->
+	<!-- 3、配置sql映射器的扫描 -->
+	<!-- 4、配置事务管理器  -->
+	
+	<!-- 引入JDBC配置外部文件 -->
+	<context:property-placeholder location="classpath:sql.properties" ignore-unresolvable="true" />
+	
+	<!-- 配置数据源，即DBCP创建链接池 -->
+	<!-- destroy-method="close"意为通知连接池，在自身如果要关闭的时候，需要关闭所有连接  -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}"></property>
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+		<!-- 初始化连接数 -->
+		<property name="initialSize" value="${jdbc.initialSize}"></property>
+		<!--maxActive: 最大连接数量-->
+		<property name="maxActive" value="${jdbc.maxActive}"></property>
+		<!--maxIdle: 最大空闲连接-->
+		<property name="maxIdle" value="20"></property>
+		<!--minIdle: 最小空闲连接-->
+		<property name="minIdle" value="5"></property>
+		<!-- 连接被泄露时是否打印 -->  
+        <property name="logAbandoned" value="true"/>
+        <!-- 事务自动提交设置为false -->
+        <property name="defaultAutoCommit" value="false"></property>
+        <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
+        <!-- 一般数据库查询超过10秒为查询缓慢时间 -->
+        <property name="removeAbandonedTimeout" value="10"></property>
+        <!--maxWait: 超时等待时间以毫秒为单位 1000等于1秒-->  
+        <property name="maxWait" value="1000"/> 
+        <!-- 在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位. -->  
+        <property name="timeBetweenEvictionRunsMillis" value="10000"/>  
+        <!--  在每次空闲连接回收器线程(如果有)运行时检查的连接数量。即连接池中如果有10条时，在外的连接就不在返回连接池；被挡在连接池外面 -->  
+        <property name="numTestsPerEvictionRun" value="10"/>  
+        <!-- 1000 * 60 * 30  连接在池中保持空闲而不被空闲连接回收器线程-->  
+        <property name="minEvictableIdleTimeMillis" value="10000"/> 
+        <!-- 检查连接时候正常，如果不正常，将会报错 -->
+        <property name="validationQuery" value="select now() from dual"></property>
+	</bean>
+   
+   	<!-- 配置SessionFactory，因spring没有提供mybatis的jar包，需要导入mybatis自己兼容spring的jar包mybatis-spring-1.2.5.jar-->
+   	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+   		<property name="dataSource" ref="dataSource"></property>
+   		<!-- 给类去别名 -->
+   		<property name="typeAliasesPackage" value="org.framestudy.spring_mybatis_annotation.gamemag.bean"></property>
+   	</bean>
+   	<!-- 配置sql映射器的扫描 -->
+   	<bean id="mapperScan" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+   		<!-- 多个mapper路径需要使用“;”区分 --> 
+   		<property name="basePackage" value="org.framestudy.spring_mybatis_annotation.gamemag.mapper"></property>
+   		<!-- 将SQL映射与Session进行关联 -->
+   		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+   	</bean>
+   	
+   	<!-- 配置事务管理器 -->
+   	<bean id="txManage" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+   		<property name="dataSource" ref="dataSource"></property>
+   	</bean>
+   	
+   	<!-- 不处理事务，则任何方法以非事务方式处理业务流程 -->
+	<!-- spring声明式事务管理方式（1）注解版，了解，不推荐 -->
+	<tx:annotation-driven transaction-manager="txManage"/>
+</beans>
